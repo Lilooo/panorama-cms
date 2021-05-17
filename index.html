@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Alice Giordani using Boostrap">
+    <title>Panorama des CMS · Support de cours</title>
+    <link href="bootstrap/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="bootstrap/jumbotron.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <a class="navbar-brand" href="#">3ESGI IW</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="#plan">Supports de cours</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#install">Installation</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#refs">Références</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#files">Fichiers</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<main role="main">
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-3">Panorama des CMS</h1>
+      <p>L'objectif de ce cours est de maîtriser les spécificités des CMS <a href="https://wordpress.org/" target="_blank">Wordpress</a> et <a href="https://prestashop.com/" target="_blank">Prestashop</a> afin que vous puissiez créer vos propres thèmes et plugins.</p>
+    </div>
+  </div>
+  <div class="container" id="plan">
+    <!-- Example row of columns -->
+    <div class="row" >
+      <div class="col-md-12">
+        <h2>Supports de cours</h2>
+        <ul>
+          <li>
+            Introduction
+          </li>
+            <ul>
+              <li>
+                <a href="doc/Syllabus_19-20_PanoramaCMS_3IW.pdf" target="_blank">Syllabus</a>
+              </li>
+              <li>
+                <a href="doc/intro-cms.pdf" target="_blank">Panel des CMS existants</a>
+              </li>
+            </ul>
+          </ul>
+      </div>
+    </div>
+    <hr id="install">
+    <div class="jumbotron">
+      <div class="row" >
+        <h2>Installation Wordpress via Docker Compose</h2>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <h3>1. Config</h3>
+          <p>Utiliser ce fichier <br><a class="btn btn-secondary" href="doc/docker-compose.yml" target="_blank" role="button">docker-compose.yml</a></p>
+        </div>
+        <div class="col-md-4">
+          <h3>2. depuis le Terminal</h3>
+          <p>Éxécuter la commande <br><kbd>sudo docker-compose up</kbd></p>
+        </div>
+        <div class="col-md-4">
+          <h3>3. depuis l'installeur Wordpress</h3>
+          <p>Finir l'installation de Wordpress, via son installeur, directement depuis le navigateur avec l'url localhost:port</p>
+        </div>
+      </div>
+      <div class="row">
+        <h3>Important : Réglages complémentaires</h3>
+      </div>
+      <ol>
+        <li>
+          pour avoir les droits sur les fichiers créées lors de l'installation dans le dossier courant 
+        </li>
+          <ul>
+            <li>
+              <kbd>sudo chown -R [user:group] [chemin du dossier]</kbd>
+            </li>
+          </ul>
+        <li>
+          pour créér un thème/plugin, créer le dossier avec les droits pour l'éditer
+        </li>
+          <ul>
+            <li>
+              <kbd>sudo cp -r [chemin du theme existant/téléchargé] [chemin du dossier de thème du WP]</kbd><br>
+              ou<br>
+              <kbd>sudo mkdir wp-content/themes/[nom du thème à créer]</kbd><br>
+              et<br>
+              <kbd>sudo chown -R [user:group] [chemin du dossier]</kbd>
+            </li>
+          </ul>
+        <li>
+          Enfin, pour avoir accès à la base de données, installer PHPmyAdmin
+        </li>
+          <ul>
+            <li>
+              ajouter "pma: ..." dans le docker-compose.yml (cf fichier/lignes en commentaires)<br>
+              attention, bien mettre un port différent de celui de WP
+            </li>
+          </ul>
+      </ol>
+    </div>
+    <hr id="install-ps">
+    <div class="jumbotron">
+      <div class="row" >
+        <h2>Installation Prestashop via Docker</h2>
+      </div>
+      <div class="row">
+        <h3>1. Configuration de base</h3>
+      </div>
+      <ul>
+        <li>
+          Créer un réseau pour faire communiquer les containers 
+        </li>
+          <ul>
+            <li>
+              <kbd>docker network create prestashop-net</kbd>
+            </li>
+          </ul>
+        <li>
+          Lancer le container mysql 5.7
+        </li>
+          <ul>
+            <li>
+              <kbd>docker run -ti --name some-mysql --network prestashop-net -e MYSQL_ROOT_PASSWORD=admin -p 3307:3306 -d mysql:5.7</kbd>
+            </li>
+            <li>
+              <kbd>docker exec -it some-mysql /bin/bash mysql -p admin CREATE DATABASE prestashop</kbd>
+            </li>
+          </ul>
+        <li>
+          Lancer le container prestashop
+        </li>
+          <ul>
+            <li>
+              <kbd>docker run -ti --network prestashop-net --name some-prestashop -p 8080:80 -d prestashop/prestashop -v ./prestashop /var/www/html</kbd>
+            </li>
+          </ul>
+      </ul>
+      <div class="row">
+        <h3>2. Mode développement</h3>
+      </div>
+      <ul>
+        <li>
+          Pour être en mode développement, afficher les erreurs...
+        </li>
+          <ul>
+            <li>
+              <kbd>docker run -ti --network prestashop-net --name some-prestashop -p 8080:80 -d -e PS_DEV_MODE=1 prestashop/prestashop -v ./prestashop /var/www/html</kbd>
+            </li>
+          </ul>
+      </ul>
+      <div class="row">
+        <h3>3. Installeur de Prestashop</h3>
+      </div>
+      <ul>
+        <li>Finir l'installation de Prestashop, via son installeur, directement depuis le navigateur avec l'url localhost:port
+        </li>
+        <li>
+          <p>Pour des raisons de sécurité, vous ne pouvez pas vous connecter tant que vous n'avez pas :</p>
+        </li>
+        <ul>
+          <li><kbd>docker exec -ti some-prestashop rm -rf your_install_folder</kbd>
+        </li>
+        <li>
+          <kbd>docker exec -ti some-prestashop mv admin admin947jlubzjh</kbd>
+        </li>
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    <div class="row" id="refs">
+      <h2>Références</h2>
+      <h3>(RTFM!)</h3>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <h4>Docker</h4>
+        <ul>
+          <li>
+            <a href="https://hub.docker.com/_/wordpress/" target="_blank">https://hub.docker.com/_/wordpress/</a>
+          </li>
+          <li>
+            <a href="https://hub.docker.com/r/phpmyadmin/phpmyadmin/" target="_blank">https://hub.docker.com/r/phpmyadmin/phpmyadmin/</a>
+          </li>
+          <li>
+            <a href="https://hub.docker.com/r/prestashop/prestashop/" target="_blank">https://hub.docker.com/r/prestashop/prestashop/</a>
+          </li>
+          <li>
+            <a href="https://build.prestashop.com/news/prestashop-and-docker/" target="_blank">https://build.prestashop.com/news/prestashop-and-docker/</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h4>Wordpress</h4>
+        <ul>
+          <li>
+            <a href="https://developer.wordpress.org/reference/" target="_blank">Documentation générale</a>
+          </li>
+          <li>
+            <a href="https://developer.wordpress.org/themes/" target="_blank">Développer son propre thème</a>
+          </li>
+          <li>
+            <a href="https://developer.wordpress.org/plugins/" target="_blank">Développer son propre plugin</a>
+          </li>
+        </ul>
+        <h4>Prestashop</h4>
+        <ul>
+          <li>
+            <a href="http://doc.prestashop.com/display/PS17/User+Guide" target="_blank">Documentation utilisateur</a>
+          </li>
+          <li>
+            <a href="https://devdocs.prestashop.com/1.7/themes/" target="_blank">Développer son propre thème</a>
+          </li>
+          <li>
+            <a href="https://devdocs.prestashop.com/1.7/modules/" target="_blank">Développer son propre module</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <hr>
+    <!-- <div class="row" id="files">
+      <h2>Réalisés en cours...</h2>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <h4>Bases d'un thème Wordpress</h4>
+            <p>Dossier <br><a class="btn btn-secondary" href="doc/montheme.zip" target="_blank" role="button">montheme.zip</a></p>
+        </div>
+        <div class="col-md-6">
+          <h4>Bases d'un plugin Wordpress</h4>
+            <p>Dossier <br><a class="btn btn-secondary" href="doc/monplugin.zip" target="_blank" role="button">monplugin.zip</a></p>
+        </div>
+    </div>
+    <hr>
+  </div> --> <!-- /container -->
+</main>
+<footer class="container">
+  <p>©AG 2020</p>
+</footer>
+<script src="bootstrap/jquery-3.js"></script>
+      <script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="bootstrap/bootstrap.js" ></script>
+</body></html>
